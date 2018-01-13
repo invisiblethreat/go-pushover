@@ -5,8 +5,12 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"io/ioutil"
+	"log"
 	"net/http"
 	"strings"
+
+	"gopkg.in/yaml.v2"
 )
 
 // NewMessage returns a new Message with API token values and a user configured
@@ -66,4 +70,19 @@ func (m *Message) Push(message string) (r *Response, err error) {
 		}
 	}
 	return r, nil
+}
+
+func GetConfFile(file string) (Config, error) {
+
+	var config Config
+	yamlFile, err := ioutil.ReadFile(file)
+	if err != nil {
+		log.Printf("yamlFile.Get err   #%v ", err)
+	}
+	err = yaml.Unmarshal(yamlFile, config)
+	if err != nil {
+		log.Fatalf("Unmarshal: %v", err)
+	}
+
+	return config, nil
 }

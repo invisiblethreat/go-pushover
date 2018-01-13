@@ -17,9 +17,6 @@ func TestPush(t *testing.T) {
 		UserKey: env.String("PUSHOVER_USER", ""),
 	}
 
-	config.Token = "avikxs3jjfn3uu2hao6ymi1k53ia5a"
-	config.UserKey = "uk8AcJoSaMA6NVgeWBo6FqrGnsRoki"
-
 	if !config.AllSet() {
 		t.Error("Credentials are not set to actively push messages")
 	}
