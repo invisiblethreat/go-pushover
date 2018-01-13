@@ -6,10 +6,10 @@ import (
 	"encoding/json"
 	"errors"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"strings"
 
+	"github.com/TV4/env"
 	"gopkg.in/yaml.v2"
 )
 
@@ -72,16 +72,35 @@ func (m *Message) Push(message string) (r *Response, err error) {
 	return r, nil
 }
 
-func GetConfFile(file string) (Config, error) {
+// GetConfigFile reads YAML file and returns a Config struct.
+func GetConfigFile(file string) (Config, error) {
 
 	var config Config
 	yamlFile, err := ioutil.ReadFile(file)
 	if err != nil {
-		log.Printf("yamlFile.Get err   #%v ", err)
+		return config, err
 	}
-	err = yaml.Unmarshal(yamlFile, config)
+	err = yaml.Unmarshal(yamlFile, &config)
 	if err != nil {
-		log.Fatalf("Unmarshal: %v", err)
+		return config, err
+	}
+
+	if !config.AllSet() {
+		return config, errors.New("Not all items were set to access API")
+	}
+
+	return config, nil
+}
+
+// GetConfigEnv reads environment variables returns a Config struct.
+func GetConfigEnv() (Config, error) {
+	config := Config{
+		Token:   env.String("PUSHOVER_TOKEN", ""),
+		UserKey: env.String("PUSHOVER_USER", ""),
+	}
+
+	if !config.AllSet() {
+		return config, errors.New("Not all items were set to access API")
 	}
 
 	return config, nil

@@ -1,10 +1,8 @@
 package pushover
 
 import (
+	"os"
 	"testing"
-
-	"github.com/TV4/env"
-	pushover "github.com/bdenning/go-pushover"
 )
 
 // TestPush runs through a number of test cases (testCases) and ensures that API responses are as expected.
@@ -12,12 +10,9 @@ func TestPush(t *testing.T) {
 
 	// Run tests that are intended to test network connectivity and other non-API failures against the real API
 
-	config := Config{
-		Token:   env.String("PUSHOVER_TOKEN", ""),
-		UserKey: env.String("PUSHOVER_USER", ""),
-	}
+	config, err := GetConfigFile("pushover.yaml")
 
-	if !config.AllSet() {
+	if err != nil {
 		t.Error("Credentials are not set to actively push messages")
 	}
 	// Create a fresh new message object for each test case
@@ -26,7 +21,7 @@ func TestPush(t *testing.T) {
 	// Send a message and check for errors
 	m.SetTitle("Testing message")
 	m.SetSound(SoundAlien)
-	m.SetPriority(PriorityEmergency)
+	m.SetPriority(PriorityNormal)
 	m.SetEmergencyDefault()
 
 	resp, err := m.Push("Testing message")
@@ -46,12 +41,45 @@ func TestPush(t *testing.T) {
 
 }
 
-func ExampleMessage_Push() {
-	// You'll need to configure these by logging in to https://pushover.net.
-	token := "KzGDORePKggMaC0QOYAMyEEuZJnyUi"
-	user := "e9e1495ec75826de5983cd1abc8031"
+func TestGetConfigFile(t *testing.T) {
+	config, err := GetConfigFile("data/test_creds.yaml")
 
-	// Send a new message using the Push method.
-	m := pushover.NewMessage(token, user)
-	m.Push("Test message contents")
+	if err != nil {
+		t.Errorf("Error reading config file: %s", err.Error())
+	}
+
+	expected := "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+	if config.UserKey != expected {
+		t.Errorf("Expected %s, but got %s", expected, config.UserKey)
+	}
+	expected = "yyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"
+	if config.Token != expected {
+		t.Errorf("Expected %s, but got %s", expected, config.UserKey)
+	}
+}
+
+func TestGetConfigEnv(t *testing.T) {
+
+	err := os.Setenv("PUSHOVER_USER", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+	if err != nil {
+		t.Errorf("Error seting env var: %s", err.Error())
+	}
+	err = os.Setenv("PUSHOVER_TOKEN", "yyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
+	if err != nil {
+		t.Errorf("Error seting env var: %s", err.Error())
+	}
+
+	config, err := GetConfigEnv()
+	if err != nil {
+		t.Errorf("Error getting config from envars: %s", err.Error())
+	}
+
+	expected := "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+	if config.UserKey != expected {
+		t.Errorf("Expected %s, but got %s", expected, config.UserKey)
+	}
+	expected = "yyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"
+	if config.Token != expected {
+		t.Errorf("Expected %s, but got %s", expected, config.UserKey)
+	}
 }
