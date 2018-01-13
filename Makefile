@@ -1,3 +1,5 @@
+.DEFAULT_GOAL := all
+
 build:
 	go build ./cmd/pushover
 

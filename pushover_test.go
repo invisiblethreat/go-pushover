@@ -1,54 +1,52 @@
-package pushover_test
+package pushover
 
 import (
-	"fmt"
-	"net/http"
-	"net/http/httptest"
-	"os"
-	"strings"
 	"testing"
 
-	"github.com/invisiblethreat/go-pushover"
+	"github.com/TV4/env"
+	pushover "github.com/bdenning/go-pushover"
 )
 
 // TestPush runs through a number of test cases (testCases) and ensures that API responses are as expected.
 func TestPush(t *testing.T) {
-	for _, test := range testCases {
-		// Run tests that are intended to test network connectivity and other non-API failures against the real API
-		if os.Getenv("PUSHOVER_USE_REAL_API") == "true" && test.URL != pushover.PushoverURL {
-			t.Skip()
-		}
 
-		// Create a fresh new message object for each test case
-		m := pushover.NewMessage(test.Token, test.User)
+	// Run tests that are intended to test network connectivity and other non-API failures against the real API
 
-		// Replace the token, user and device values. Some of these replace statement are intended to fail.
-		m.Token = strings.Replace(m.Token, "$token$", os.Getenv("PUSHOVER_TOKEN"), 1)
-		m.User = strings.Replace(m.User, "$user$", os.Getenv("PUSHOVER_USER"), 1)
-
-		// If the PUSHOVER_USE_REAL_API environment variable isn't set, then use a mock http service running locally.
-		if os.Getenv("PUSHOVER_USE_REAL_API") != "true" {
-			s := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-				fmt.Fprintln(w, test.ExpectedResponse)
-			}))
-			defer s.Close()
-
-			m.URL = s.URL
-		}
-
-		// Send a message and check for errors
-		resp, err := m.Push(test.Message)
-
-		// Check for failures that did not result in Push() returning an error
-		if err == nil && resp.Status != pushover.StatusSuccess {
-			t.Errorf("A test that should have failed \"%s\" has passed: %v", test.Message, err)
-		}
-
-		// Check that the the status returned by the API is what we were expecting.
-		if resp.Status != test.ExpectedStatus {
-			t.Errorf("The \"%s\" test returned an unexpected status code: %v", test.Message, resp.Status)
-		}
+	config := Config{
+		Token:   env.String("PUSHOVER_TOKEN", ""),
+		UserKey: env.String("PUSHOVER_USER", ""),
 	}
+
+	config.Token = "avikxs3jjfn3uu2hao6ymi1k53ia5a"
+	config.UserKey = "uk8AcJoSaMA6NVgeWBo6FqrGnsRoki"
+
+	if !config.AllSet() {
+		t.Error("Credentials are not set to actively push messages")
+	}
+	// Create a fresh new message object for each test case
+	m := NewMessageConfig(config)
+
+	// Send a message and check for errors
+	m.SetTitle("Testing message")
+	m.SetSound(SoundAlien)
+	m.SetPriority(PriorityEmergency)
+	m.SetEmergencyDefault()
+
+	resp, err := m.Push("Testing message")
+	if err != nil {
+		t.Errorf("Error sending message: %s", err.Error())
+	}
+
+	// Check for failures that did not result in Push() returning an error
+	if resp.Status != StatusSuccess {
+		t.Errorf("Response was not successful: %s", err.Error())
+	}
+
+	// Check that the the status returned by the API is what we were expecting.
+	if resp.Status != 1 {
+		t.Errorf("The test returned an unexpected status code: %d", resp.Status)
+	}
+
 }
 
 func ExampleMessage_Push() {

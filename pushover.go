@@ -9,18 +9,34 @@ import (
 	"strings"
 )
 
-// NewMessage returns a new Message with API token values and a recipient device
-// configured.
+// NewMessage returns a new Message with API token values and a user configured
+// .
 func NewMessage(token, user string) *Message {
 	return &Message{Token: token, User: user}
 }
 
+// NewMessageConfig returns a new Message with API token values and a user
+// configured. The argument of Config type allow for easier constraint checking
+func NewMessageConfig(config Config) *Message {
+	return &Message{Token: config.Token, User: config.UserKey}
+}
+
 // Push sends a message via the pushover.net API and returns the json response
 func (m *Message) Push(message string) (r *Response, err error) {
+	r = &Response{}
+
+	if message == "" {
+		return r, errors.New("Message can not be blank")
+	}
 	m.Message = message
 
-	// Initalise an empty Response
-	r = &Response{}
+	// Check that required items are set
+	if m.Priority == PriorityEmergency {
+		err = m.EmergencyParamsSet()
+		if err != nil {
+			return r, err
+		}
+	}
 
 	msg, err := json.Marshal(m)
 	if err != nil {
@@ -45,7 +61,7 @@ func (m *Message) Push(message string) (r *Response, err error) {
 	// Check to see if pushover.net set the status to indicate an error without providing and explanation
 	if r.Status != StatusSuccess {
 		if len(r.Errors) > 0 {
-			joined := strings.Join(r.Errors, "\n")
+			joined := strings.Join(r.Errors, ", ")
 			return r, errors.New(joined)
 		}
 	}

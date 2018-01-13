@@ -1,6 +1,6 @@
 # Pushover Golang Package
 
-[![Documentation](https://godoc.org/github.com/invisiblethreat/go-pushover?status.svg)](https://godoc.org/github.com/invisiblethreat/go-pushover) [![Build Status](https://drone.io/github.com/invisiblethreat/go-pushover/status.png)](https://drone.io/github.com/invisiblethreat/go-pushover/latest) [![Coverage Status](https://coveralls.io/repos/invisiblethreat/go-pushover/badge.svg?branch=master&service=github)](https://coveralls.io/github/invisiblethreat/go-pushover?branch=master)
+[![Documentation](https://godoc.org/github.com/invisiblethreat/go-pushover?status.svg)](https://godoc.org/github.com/invisiblethreat/go-pushover) Future TravisCI link [![Coverage Status](https://coveralls.io/repos/invisiblethreat/go-pushover/badge.svg?branch=master&service=github)](https://coveralls.io/github/invisiblethreat/go-pushover?branch=master)
 
 A Golang package for sending notifications via https://api.pushover.net.
 
@@ -9,7 +9,8 @@ https://github.com/gregdel/pushover. Neither did exactly what I wanted, in the
 way that I wanted.
 
 # Package Example
-You can use the pushover package within your golang applications as follows:
+
+You can use the pushover package within your Golang applications as follows:
 ```Go
 // Set your pushover API keys
 token := "KzGDORePKggMaC0QOYAMyEEuZJnyUi"

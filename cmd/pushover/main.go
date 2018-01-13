@@ -1,3 +1,4 @@
+/*
 package main
 
 import (
@@ -42,3 +43,4 @@ func main() {
 		log.Fatal("Error while sending message")
 	}
 }
+*/

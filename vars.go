@@ -6,33 +6,77 @@ const (
 	// StatusSuccess is the expected status code when a message has been succesfully sent.
 	StatusSuccess = 1
 
-	// Sounds
-	SoundPushover     = "pushover"
-	SoundBike         = "bike"
-	SoundBugle        = "bugle"
-	SoundCashRegister = "cashregister"
-	SoundClassical    = "classical"
-	SoundCosmic       = "cosmic"
-	SoundFalling      = "falling"
-	SoundGamelan      = "gamelan"
-	SoundIncoming     = "incoming"
-	SoundIntermission = "intermission"
-	SoundMagic        = "magic"
-	SoundMechanical   = "mechanical"
-	SoundPianobar     = "pianobar"
-	SoundSiren        = "siren"
-	SoundSpaceAlarm   = "spacealarm"
-	SoundTugBoat      = "tugboat"
-	SoundAlien        = "alien"
-	SoundClimb        = "climb"
-	SoundPersistent   = "persistent"
-	SoundEcho         = "echo"
-	SoundUpDown       = "updown"
-	SoundNone         = "none"
+	//Sounds for messages
 
-	PriorityLowest    = -2
-	PriorityLow       = -1
-	PriorityNormal    = 0
-	PriorityHigh      = 1
-	PriorityEmergency = 2
+	// SoundPushover is a Pushover API sound
+	SoundPushover Sound = "pushover"
+	// SoundClassical is a Pushover API sound
+	SoundClassical Sound = "classical"
+
+	// SoundCosmic is a Pushover API sound
+	SoundCosmic Sound = "cosmic"
+
+	// SoundFalling is a Pushover API sound
+	SoundFalling Sound = "falling"
+
+	// SoundGamelan is a Pushover API sound
+	SoundGamelan Sound = "gamelan"
+
+	// SoundIncoming is a Pushover API sound
+	SoundIncoming Sound = "incoming"
+
+	// SoundIntermission is a Pushover API sound
+	SoundIntermission Sound = "intermission"
+
+	// SoundMagic is a Pushover API sound
+	SoundMagic Sound = "magic"
+
+	// SoundMechanical is a Pushover API sound
+	SoundMechanical Sound = "mechanical"
+
+	// SoundPianobar is a Pushover API sound
+	SoundPianobar Sound = "pianobar"
+
+	// SoundSiren is a Pushover API sound
+	SoundSiren Sound = "siren"
+
+	// SoundSpaceAlarm is a Pushover API sound
+	SoundSpaceAlarm Sound = "spacealarm"
+
+	// SoundTugBoat is a Pushover API sound
+	SoundTugBoat Sound = "tugboat"
+
+	// SoundAlien is a Pushover API sound
+	SoundAlien Sound = "alien"
+
+	// SoundClimb is a Pushover API sound
+	SoundClimb Sound = "climb"
+
+	// SoundPersistent is a Pushover API sound
+	SoundPersistent Sound = "persistent"
+
+	// SoundEcho is a Pushover API sound
+	SoundEcho Sound = "echo"
+
+	// SoundUpDown is a Pushover API sound
+	SoundUpDown Sound = "updown"
+)
+
+const (
+	// PriorityLowest makes no sounds, alerts, or popups
+	PriorityLowest Priority = -2
+
+	// PriorityLow makes no sounds or alerts, but will make a popup
+	PriorityLow Priority = -1
+
+	// PriorityNormal will make a sound, alert, and popup. If this message is
+	// received during quiet hours, it will be treated as PriorityLow
+	PriorityNormal Priority = 0
+
+	// PriorityHigh will bypass quiet hours, and will be highlighted in red
+	PriorityHigh Priority = 1
+
+	// PriorityEmergency are the same as PriorityHigh but require acknowledged.
+	// Additionally, 'retry' and 'expiry' must be set in the message
+	PriorityEmergency Priority = 2
 )
