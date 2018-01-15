@@ -1,0 +1,10 @@
+#!/bin/bash
+
+OS=(darwin linux windows)
+
+for i in ${OS[@]}
+do
+  echo -n "Building pushover-${i}..."
+  GOOS=$i go build -o pushover-${i}
+  echo " Done."
+done
