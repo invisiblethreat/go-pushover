@@ -1,10 +1,14 @@
 #!/bin/bash
 
-OS=(darwin linux windows)
+TAG=$(git describe --tags --abbrev=0)
 
+RELEASE_DIR="release-${TAG}"
+mkdir $RELEASE_DIR
+
+OS=(darwin linux windows)
 for i in ${OS[@]}
 do
-  echo -n "Building pushover-${i}..."
-  GOOS=$i go build -o pushover-${i}
+  echo -n "Building  ${RELEASE_DIR}/pushover-${i}..."
+  GOOS=$i go build -o ${RELEASE_DIR}/pushover-${TAG}-${i}
   echo " Done."
 done

@@ -1,3 +1,4 @@
 vendor/*
 pushover.yaml
 go-pushover
+release-*
