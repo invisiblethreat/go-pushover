@@ -4,11 +4,11 @@
 
 A Golang package for sending notifications via https://api.pushover.net.
 
-This library is a mashup of https://github.com/bdenning/go-pushover and
+This library is a mash-up of https://github.com/bdenning/go-pushover and
 https://github.com/gregdel/pushover. Neither did exactly what I wanted, in the
 way that I wanted.
 
-## Package Example
+## Library Example
 
 You can use the pushover package within your Golang applications as follows:
 
@@ -38,6 +38,12 @@ if err != nil {
     fmt.Errorf("Error sending message: %s\n", err.Error())
 }
 ```
+
+## Dependencies
+
+The dependency set is small- `glide` can be used to quickly resolve
+all of the needed repositories with `glide install`. More information about
+`glide` can be found [here](https://github.com/Masterminds/glide).
 
 ## Command Line Tool
 
