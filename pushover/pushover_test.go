@@ -41,6 +41,19 @@ func TestPush(t *testing.T) {
 
 }
 
+func TestNewMesage(t *testing.T) {
+	msg := NewMessage("x", "y")
+
+	if msg.Token != "x" {
+		t.Errorf("Expected %s, but got %s", "x", msg.Token)
+	}
+
+	if msg.User != "y" {
+		t.Errorf("Expected %s, but got %s", "y", msg.User)
+	}
+
+}
+
 func TestGetConfigFile(t *testing.T) {
 	config, err := GetConfigFile("data/test_creds.yaml")
 
@@ -84,6 +97,18 @@ func TestGetConfigEnv(t *testing.T) {
 	}
 }
 
+func TestAllSet(t *testing.T) {
+
+	config := Config{Token: "x"}
+	if config.AllSet() != false {
+		t.Errorf("AllSet: Expected %t, but got %t", false, true)
+	}
+
+	config.UserKey = "y"
+	if config.AllSet() != true {
+		t.Errorf("AllSet: Expected %t, but got %t", true, false)
+	}
+}
 func TestGettersSettters(t *testing.T) {
 	m := Message{}
 
@@ -169,4 +194,42 @@ func TestGettersSettters(t *testing.T) {
 		t.Errorf("Expected failure condition not returned for SetRetry")
 	}
 
+}
+
+func TestSetEmergencyDefault(t *testing.T) {
+	config := Config{UserKey: "x", Token: "y"}
+
+	m := NewMessageConfig(config)
+	m.SetPriority(PriorityEmergency)
+	m.SetEmergencyDefault()
+
+	err := m.EmergencyParamsSet()
+	if err != nil {
+		t.Errorf("Error in validating emergency params: %s", err.Error())
+	}
+
+	if m.GetRetry() != 300 {
+		t.Errorf("Expected %d, but got %d", 300, m.GetRetry())
+	}
+	if m.GetExpiry() != 3600 {
+		t.Errorf("Expected %d, but got %d", 3600, m.GetExpiry())
+	}
+
+	m.Retry = 0
+	err = m.EmergencyParamsSet()
+	if err == nil {
+		t.Error("Error condition should have been triggered for EmergencyParamSet")
+	}
+
+	err = m.EmergencyParamsSet()
+	m.Expire = 0
+	if err == nil {
+		t.Error("Error condition should have been triggered for EmergencyParamSet")
+	}
+
+	m.Priority = PriorityHigh
+	err = m.EmergencyParamsSet()
+	if err != nil {
+		t.Error("Error condition should not have been triggered for EmergencyParamSet")
+	}
 }

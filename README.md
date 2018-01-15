@@ -8,30 +8,64 @@ This library is a mashup of https://github.com/bdenning/go-pushover and
 https://github.com/gregdel/pushover. Neither did exactly what I wanted, in the
 way that I wanted.
 
-# Package Example
+## Package Example
 
 You can use the pushover package within your Golang applications as follows:
-```Go
-// Set your pushover API keys
-token := "KzGDORePKggMaC0QOYAMyEEuZJnyUi"
-user := "e9e1495ec75826de5983cd1abc8031"
 
-// Send your message
-m := pushover.NewMessage(token, user)
-m.Push("Server exchange01.example.net is in a critical state.")
+```shell
+// Set your pushover API keys. These keys are fake.
+export PUSHOVER_TOKEN="KzGDOReQKggMaC0QOYAMyEEuZJnyUi"
+export PUSHOVER_USER="e9e1495ec45826de5983cd1abc8031"
 ```
 
-# Command Line Tool
-A command line tool is provided under cmd/pushover. Build and install the command using:
-```Shell
-$ make install
+```go
+package main
+import (
+  "fmt"
+
+  "github.com/invisiblethreat/go-pushover/pushover"
+
+)
+// from environmental variables. Example of setting is above
+config := pushover.GetConfigEnv()
+// or form a YAML config file. pushover.yaml.sample is the template
+config := pushover.GetConfigFile(file)
+
+msg := pushover.NewMessageConfig(config)
+res, err := m.Push("message")
+
+if err != nil {
+    fmt.Errorf("Error sending message: %s\n", err.Error())
+}
 ```
-Before using the command line tool, you must first set the following environment variables.
-```Shell
-$ export PUSHOVER_TOKEN="KzGDORePKggMaC0QOYAMyEEuZJnyUi"
-$ export PUSHOVER_USER="e9e1495ec75826de5983cd1abc8031"
-```
+
+## Command Line Tool
+
+A binary is provided by:
+
+* running `go install github.com/invisiblethreat/go-pushover`, which installs in `$GOPATH/bin/`
+* running `go build`, which builds in the root directory.
+
+```shell
+
+Usage of ./go-pushover:
+  -f, --file string      YAML config file location (default "pushover.yaml")
+  -m, --message string   Message to send. Omit if piping from STDIN
+  -t, --title string     Title for message. If empty, default name for the token will be used
+
+  ```
+
 Then messages can be sent by piping output to the pushover command.
-```Shell
-$ echo "Server exchange01.example.net is in a critical state" | pushover
+
+```shell
+
+export PUSHOVER_TOKEN="KzGDORePKggMaC0QOYAMyEEuZJnyUi" # fake
+export PUSHOVER_USER="e9e1495ec75826de5983cd1abc8031"  # fake
+echo "Foo is in a critical state" | go-pushover
+# or
+echo "Foo is in a critical state" | go-pushover --file ../../pushover.yaml
+# or
+go-pushover --file ../../pushover.yaml --message "Foo is in a critical state"
+
+
 ```
