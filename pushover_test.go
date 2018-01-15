@@ -83,3 +83,90 @@ func TestGetConfigEnv(t *testing.T) {
 		t.Errorf("Expected %s, but got %s", expected, config.UserKey)
 	}
 }
+
+func TestGettersSettters(t *testing.T) {
+	m := Message{}
+
+	expected := "test string"
+
+	m.SetMessage(expected)
+	if m.GetMessage() != expected {
+		t.Errorf("Expected %s, but got %s", expected, m.GetMessage())
+	}
+
+	m.SetTitle(expected)
+	if m.GetTitle() != expected {
+		t.Errorf("Expected %s, but got %s", expected, m.GetTitle())
+	}
+
+	var expectedTS int32 = 1
+
+	m.SetUnixTimestamp(expectedTS)
+	if m.GetUnixTimestamp() != expectedTS {
+		t.Errorf("Expected %d, but got %d", expectedTS, m.GetUnixTimestamp())
+	}
+
+	m.SetDevice(expected)
+	if m.GetDevice() != expected {
+		t.Errorf("Expected %s, but got %s", expected, m.GetDevice())
+	}
+
+	m.SetURL(expected)
+	if m.GetURL() != expected {
+		t.Errorf("Expected %s, but got %s", expected, m.GetURL())
+	}
+
+	m.SetURLTitle(expected)
+	if m.GetURLTitle() != expected {
+		t.Errorf("Expected %s, but got %s", expected, m.GetURLTitle())
+	}
+
+	expectedSound := SoundPushover
+
+	m.SetSound(expectedSound)
+	if m.GetSound() != expectedSound {
+		t.Errorf("Expected %s, but got %s", expectedSound, m.GetSound())
+	}
+
+	expectedPriority := PriorityNormal
+
+	m.SetPriority(expectedPriority)
+	if m.GetPriority() != expectedPriority {
+		t.Errorf("Expected %d, but got %d", expectedPriority, m.GetPriority())
+	}
+
+	expectedExpiry := 10800
+	failExpiry := 10801
+
+	err := m.SetExpiry(expectedExpiry)
+	if err != nil {
+		t.Errorf("Error setting expiry time: %s", err.Error())
+	}
+
+	if m.GetExpiry() != expectedExpiry {
+		t.Errorf("Expected %d, but got %d", expectedExpiry, m.GetExpiry())
+	}
+
+	err = m.SetExpiry(failExpiry)
+	if err == nil {
+		t.Errorf("Expected failure condition not returned for SetExpiry")
+	}
+
+	expectedRetry := 30
+	failRetry := 29
+
+	err = m.SetRetry(expectedRetry)
+	if err != nil {
+		t.Errorf("Error setting expiry time: %s", err.Error())
+	}
+
+	if m.GetRetry() != expectedRetry {
+		t.Errorf("Expected %d, but got %d", expectedRetry, m.GetRetry())
+	}
+
+	err = m.SetRetry(failRetry)
+	if err == nil {
+		t.Errorf("Expected failure condition not returned for SetRetry")
+	}
+
+}

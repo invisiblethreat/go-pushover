@@ -8,6 +8,16 @@ import (
 // These are all courtsey functions that make interacting wiht a message very
 // easy, and fairly uniform.
 
+// SetMessage will be in frequently used due to the current Push method
+func (m *Message) SetMessage(s string) {
+	m.Message = s
+}
+
+// GetMessage returns the set message for the message.
+func (m *Message) GetMessage() string {
+	return m.Message
+}
+
 // SetTitle sets the title of a message. If unset, the default Pushover name
 // will be used
 func (m *Message) SetTitle(s string) {
@@ -83,7 +93,7 @@ func (m *Message) GetSound() Sound {
 
 // SetExpiry sets the sound for the alert. See vars.go for the list.
 func (m *Message) SetExpiry(i int) error {
-	if i < 10800 {
+	if i <= 10800 {
 		m.Expire = i
 		return nil
 	}
