@@ -1,6 +1,6 @@
 # Pushover Golang Package
 
-[![Documentation](https://godoc.org/github.com/invisiblethreat/go-pushover/pushover?status.svg)](https://godoc.org/github.com/invisiblethreat/go-pushover) Future TravisCI link [![Coverage Status](https://coveralls.io/repos/invisiblethreat/go-pushover/badge.svg?branch=master&service=github)](https://coveralls.io/github/invisiblethreat/go-pushover?branch=master)
+[![Documentation](https://godoc.org/github.com/invisiblethreat/go-pushover/pushover?status.svg)](https://godoc.org/github.com/invisiblethreat/go-pushover)[![Build Status](https://travis-ci.org/invisiblethreat/go-pushover.svg?branch=master)](https://travis-ci.org/invisiblethreat/go-pushover)[![Coverage Status](https://coveralls.io/repos/invisiblethreat/go-pushover/badge.svg?branch=master&service=github)](https://coveralls.io/github/invisiblethreat/go-pushover?branch=master)
 
 A Golang package for sending notifications via https://api.pushover.net.
 
