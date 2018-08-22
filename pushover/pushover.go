@@ -32,11 +32,11 @@ func NewMessageConfig(config Config) *Message {
 func (m *Message) Push(message string) (r *Response, err error) {
 	r = &Response{}
 
-	if message == "" {
+	if message == "" && m.Message == "" {
 		return r, errors.New("Message can not be blank")
+	} else if m.Message == "" {
+		m.Message = message
 	}
-	m.Message = message
-
 	// Check that required items are set
 	if m.Priority == PriorityEmergency {
 		err = m.EmergencyParamsSet()

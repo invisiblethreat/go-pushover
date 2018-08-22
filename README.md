@@ -32,7 +32,7 @@ config := pushover.GetConfigEnv()
 config := pushover.GetConfigFile(file)
 
 msg := pushover.NewMessageConfig(config)
-res, err := m.Push("message")
+res, err := msg.Push("message")
 
 if err != nil {
     fmt.Errorf("Error sending message: %s\n", err.Error())
