@@ -4,7 +4,7 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/invisiblethreat/go-pushover/pushover"
+	"github.com/invisiblethreat/go-pushover"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/pflag"
 )

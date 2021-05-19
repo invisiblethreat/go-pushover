@@ -7,12 +7,9 @@ import (
 	"errors"
 	"io/ioutil"
 	"net/http"
-	"os"
 	"strings"
 
-	"github.com/TV4/env"
-	"github.com/sirupsen/logrus"
-	"github.com/spf13/pflag"
+	"github.com/invisiblethreat/env"
 	"gopkg.in/yaml.v2"
 )
 
@@ -107,48 +104,4 @@ func GetConfigEnv() (Config, error) {
 	}
 
 	return config, nil
-}
-
-func main() {
-	var file, title, message string
-	pflag.StringVarP(&file, "file", "f", "pushover.yaml", "YAML config file location")
-	pflag.StringVarP(&title, "title", "t", "", "Title for message")
-	pflag.StringVarP(&message, "message", "m", "", "Message to send")
-	pflag.Parse()
-	var config Config
-	// try to get env vars first
-	config, err := GetConfigEnv()
-
-	if err != nil {
-		envErr := err
-		// fall back to a config file
-		config, err = GetConfigFile(file)
-		if err != nil {
-			logrus.Fatalf(
-				"Errors using env vars and config file: \n\t%s\n\t%s\n",
-				envErr.Error(), err.Error())
-		}
-
-	}
-
-	m := NewMessageConfig(config)
-	if title != "" {
-		m.SetTitle(title)
-	}
-
-	if message == "" {
-
-		// Read the message from stdin and send
-		stdin, err := ioutil.ReadAll(os.Stdin)
-		if err != nil {
-			logrus.Fatal("Error getting input from STDIN")
-		}
-		message = string(stdin)
-	}
-	// Send the message
-	_, err = m.Push(message)
-	if err != nil {
-		logrus.WithError(err).Fatal("Error while sending message")
-	}
-
 }
